@@ -8,6 +8,7 @@ module.exports = {
 	removeRedundantBlockStatements: require(__dirname + '/removeRedundantBlockStatements'),
 	replaceBooleanExpressionsWithIf: require(__dirname + '/replaceBooleanExpressionsWithIf'),
 	replaceCallExpressionsWithUnwrappedIdentifier: require(__dirname + '/replaceCallExpressionsWithUnwrappedIdentifier'),
+        replaceConstantVoidWithUndefined: require(__dirname + '/replaceConstantVoidWithUndefined'),
 	replaceEvalCallsWithLiteralContent: require(__dirname + '/replaceEvalCallsWithLiteralContent'),
 	replaceFunctionShellsWithWrappedValue: require(__dirname + '/replaceFunctionShellsWithWrappedValue'),
 	replaceFunctionShellsWithWrappedValueIIFE: require(__dirname + '/replaceFunctionShellsWithWrappedValueIIFE'),
