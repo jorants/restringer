@@ -17,7 +17,8 @@
  */
 function resolveProxyCalls(arb, candidateFilter = () => true) {
 	for (let i = 0; i < arb.ast.length; i++) {
-		const n = arb.ast[i];
+	    const n = arb.ast[i];
+
 		if (n.type === 'FunctionDeclaration' &&
 		n.body?.body?.length === 1 &&
 		n.body.body[0].type === 'ReturnStatement' &&
@@ -43,6 +44,34 @@ function resolveProxyCalls(arb, candidateFilter = () => true) {
 					arb.markNode(ref, ret.callee);
 				}
 			}
+		}else if(n.type === "VariableDeclarator" &&
+			 n.init?.type === 'ArrowFunctionExpression' &&
+			 n.init?.expression &&
+			 n.init?.body?.type === "CallExpression" &&
+			 n.init?.body?.arguments?.length === n.init?.params?.length &&
+			 n.init?.body?.callee.type === 'Identifier' &&
+			 candidateFilter(n)
+			){
+		    // Arrow Function
+		    const funcName = n.id;
+		    const ret = n.init?.body;
+		    let transitiveArguments = true;
+		    try {
+			for (let j = 0; j < n.init?.params.length; j++) {
+			    if (n.init?.params[j]?.name !== ret?.arguments[j]?.name) {
+
+				transitiveArguments = false;
+				break;
+			    }
+			}
+		    } catch {
+			transitiveArguments = false;
+		    }
+		    if (transitiveArguments) {
+			for (const ref of funcName.references || []) {
+			    arb.markNode(ref, ret.callee);
+			}
+		    }
 		}
 	}
 	return arb;
